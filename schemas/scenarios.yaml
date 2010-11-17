@@ -100,7 +100,7 @@ mapping:
               "type":      { enum: [get, post, put, delete] }                    # Request type (override REST settings)
               "absolute":  { type: str }                                         # Absolute
               "id":        { type: str }                                         # Request resource id
-              "format":    { enum: [js, xml, html, ''], default: xml }           # Request format (only applies to GET requests)
+              "format":    { enum: [js, xml, html, json, ''], default: xml }     # Request format (only applies to GET requests)
               "delay":     { type: str}                                          # Delay before request is made (integer or range)
               "params":                                                          # Request body parameters
                 &name_value_pairs
