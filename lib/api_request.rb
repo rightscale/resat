@@ -141,17 +141,14 @@ module Resat
     
     # Retrieve JSON body field
     def json_field(json, field)
-      puts "JSON FIELD: #{json}\n#{field}\n"
       return nil unless json
       fields = field.split('/')
-      puts "FIELDS: #{fields.inspect}\n"
       fields.each do |field|
         if json.is_a?(Array)
           json = json[field.to_i]
         else
           json = json[field]
         end
-      puts "JSON: #{json.inspect}\n"
         return nil unless json
       end
       json
