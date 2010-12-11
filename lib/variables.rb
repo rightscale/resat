@@ -4,6 +4,7 @@
 #
 
 require 'singleton'
+require 'yaml'
 
 module Resat
 
