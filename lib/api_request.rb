@@ -85,8 +85,11 @@ module Resat
       end
       form_data = Hash.new
       @headers.each { |header| @request[header['name']] = header['value'] }
-      @params.each { |param| form_data[param['name']] = param['value'] }
-      @request.set_form_data(form_data) unless form_data.empty?
+      @params.each do |param|
+        form_data[param['name']] ||= []
+        form_data[param['name']] << param['value']
+      end
+      set_form_data(@request, form_data) unless form_data.empty?
       Log.request(@request)
 
       # 4. Send request and check response code
@@ -170,6 +173,24 @@ module Resat
         end
       end
       seconds || 0
+    end
+
+    # Using custom set_form_data and urlencode
+    # Ruby NET/HTTP does not support duplicate parameter names
+    # File net/http.rb, line 1426
+    def set_form_data(request, params, sep = '&')
+      request.body = params.map {|k,v|
+        if v.instance_of?(Array)
+          v.map {|e| "#{urlencode(k.to_s)}=#{urlencode(e.to_s)}"}.join(sep)
+        else
+          "#{urlencode(k.to_s)}=#{urlencode(v.to_s)}"
+        end
+      }.join(sep)
+      request.content_type = 'application/x-www-form-urlencoded'
+    end
+
+    def urlencode(str)
+      str.gsub(/[^a-zA-Z0-9_\.\-]/n) {|s| sprintf('%%%02x', s[0]) }
     end
 
   end
