@@ -101,6 +101,7 @@ module Resat
     def send
       sleep(delay_seconds) # Delay request if needed
       http = Net::HTTP.new(@uri.host, @uri.port)
+      http.read_timeout = 1200
       http.use_ssl = @config_use_ssl
       begin
         res = http.start { |http| @response = http.request(@request) }
